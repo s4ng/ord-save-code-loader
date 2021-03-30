@@ -2,7 +2,11 @@ from cx_Freeze import setup, Executable
 
 buildOptions = dict(packages=['tkinter'])
 
-exe = [Executable('src/app.py', base='Win32GUI')]
+exe = [Executable('src/app.py', 
+    base='Win32GUI', 
+    targetName="OrdSaveCodeLoader.exe",
+    icon="static/icon.ico"
+    )]
 
 setup(
     name='ordSaveCodeLoader', 
