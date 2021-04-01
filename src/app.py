@@ -9,7 +9,7 @@ buf= ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
 ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
 
 ordPath = buf.value + '\\Warcraft III\\CustomMapData\\ORD9'
-userIdPath = buf.value + '\\OrdSaveCodeLoader'
+userIdPath = buf.value + '\\OrdSaveCodeLoader\\userId.txt'
 
 root = Tk()
 
@@ -43,10 +43,13 @@ saveCodeText.grid(row = 1, column = 1)
 clipboardBtn= Button(root, text="copy", padx = 2, pady = 2, command=lambda:setClipboardSaveCode(saveCodeText.get()))
 clipboardBtn.grid(row = 1, column = 2, padx = 2, pady = 2)
 
+def setSaveCodeText(saveCode):
+    saveCodeText.delete(0, "end")
+    saveCodeText.insert(0, saveCode)
+
 def setSaveCode(userId):
     if os.path.isdir(ordPath) is not True:
-        saveCodeText.delete(0,"end")
-        saveCodeText.insert(0, '원랜디 폴더가 존재하지 않습니다')
+        setSaveCodeText("원랜디 폴더가 존재하지 않습니다")
         return
     fileNames = os.listdir(ordPath)
     userFiles = {}
@@ -55,11 +58,10 @@ def setSaveCode(userId):
         if userId == splitedFileName[1]:
             userFiles[int(splitedFileName[2])] = fileName
     if not userFiles:
-        saveCodeText.delete(0,"end")
-        saveCodeText.insert(0, 'ID 검색 실패')
+        setSaveCodeText("ID 검색 실패")
         return
     
-    f = open(userIdPath + '\\' + 'userId.txt', 'w', encoding="UTF8")
+    f = open(userIdPath, 'w', encoding="UTF8")
     f.write(userId)
 
     sortedUserFiles = sorted(userFiles.items())
@@ -79,20 +81,17 @@ def setSaveCode(userId):
         if isNowSaveCode:
             saveCodeResult = saveCodeResult + char
     saveCodeLableText.set(str(sortedUserFiles[-1][0]) + ' 클리어')
-    saveCodeText.delete(0,"end")
-    saveCodeText.insert(0, saveCodeResult)
+    setSaveCodeText(saveCodeResult)
     return
 
 def setClipboardSaveCode(saveCode):
     root.clipboard_clear()
     root.clipboard_append(saveCode)
 
-if os.path.isdir(userIdPath):
-    f = open(userIdPath + '\\' + 'userId.txt', 'r', encoding="UTF8")
+if os.path.isfile(userIdPath):
+    f = open(userIdPath, 'r', encoding="UTF8")
     idText.delete(0,"end")
     idText.insert(0, f.readline())
     setSaveCode(idText.get())
-else:
-    os.mkdir(userIdPath)
 
 root.mainloop()
