@@ -10,7 +10,7 @@ exe = [Executable('src/app.py',
 
 setup(
     name='ordSaveCodeLoader', 
-    version="0.0.1",
+    version="0.0.3",
     author="s4ng",
     description="원랜디 세이브 코드 로더",
     options=dict(build_exe = buildOptions),

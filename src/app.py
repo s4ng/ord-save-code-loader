@@ -54,9 +54,12 @@ def setSaveCode(userId):
     fileNames = os.listdir(ordPath)
     userFiles = {}
     for fileName in fileNames:
-        splitedFileName = fileName.split('.')[0].split('_')
-        if userId == splitedFileName[1]:
-            userFiles[int(splitedFileName[2])] = fileName
+        splitedFileName = fileName[:-4].split('_')
+        userIdInFileName = splitedFileName[1]
+        if len(splitedFileName) > 3:
+            userIdInFileName = '_'.join(splitedFileName[1:-1])
+        if userId == userIdInFileName:
+            userFiles[int(splitedFileName[-1])] = fileName
     if not userFiles:
         setSaveCodeText("ID 검색 실패")
         return
