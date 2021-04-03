@@ -72,9 +72,13 @@ def setSaveCode(userId):
     f = open(ordPath+'\\'+lastSaveFile, 'r', encoding='UTF8')
     lines = f.readlines()
     f.close()
+    for line in lines:
+        if "-load" in line:
+            saveCodeLine = line
+            break
     saveCodeResult = ''
     isNowSaveCode = False
-    for char in lines[5]:
+    for char in saveCodeLine:
         if char == '\"':
             if not isNowSaveCode:
                 isNowSaveCode = True
