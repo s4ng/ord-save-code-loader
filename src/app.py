@@ -1,6 +1,7 @@
 from tkinter import *
 import os
 import ctypes.wintypes
+import chardet
 
 CSIDL_PERSONAL = 5
 SHGFP_TYPE_CURRENT = 0
@@ -69,7 +70,11 @@ def setSaveCode(userId):
 
     sortedUserFiles = sorted(userFiles.items())
     lastSaveFile = sortedUserFiles[-1][1]
-    f = open(ordPath+'\\'+lastSaveFile, 'r', encoding='UTF8')
+
+    rawF = open(ordPath+'\\'+lastSaveFile, 'rb').read()
+    res = chardet.detect(rawF)
+    f = open(ordPath+'\\'+lastSaveFile, 'r', encoding=res['encoding'], errors='ignore')
+
     lines = f.readlines()
     f.close()
     for line in lines:
