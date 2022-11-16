@@ -10,5 +10,5 @@
 ```
 // build
 python setup.py install
-python setup.py builc
+python setup.py build
 ```
