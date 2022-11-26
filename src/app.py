@@ -10,6 +10,7 @@ buf= ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
 ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, SHGFP_TYPE_CURRENT, buf)
 
 ordPath = buf.value + '\\Warcraft III\\CustomMapData\\ORD10'
+userIdDirectoryPath = buf.value + '\\OrdSaveCodeLoader'
 userIdPath = buf.value + '\\OrdSaveCodeLoader\\userId.txt'
 
 root = Tk()
@@ -61,10 +62,11 @@ def setSaveCode(userId):
             userIdInFileName = '_'.join(splitedFileName[1:-1])
         if userId == userIdInFileName:
             userFiles[int(splitedFileName[-1])] = fileName
-    if not userFiles:
+    if not userFiles: 
         setSaveCodeText("ID 검색 실패")
         return
     
+    createFolder(userIdDirectoryPath)
     f = open(userIdPath, 'w', encoding="UTF8")
     f.write(userId)
 
@@ -100,10 +102,22 @@ def setClipboardSaveCode(saveCode):
     root.clipboard_clear()
     root.clipboard_append(saveCode)
 
-if os.path.isfile(userIdPath):
+def createFolder(directory):
+    try:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+    except OSError:
+        print ('Error: Creating directory. ' +  directory)
+
+if os.path.isfile(userIdPath) is True:
     f = open(userIdPath, 'r', encoding="UTF8")
     idText.delete(0,"end")
     idText.insert(0, f.readline())
     setSaveCode(idText.get())
+else:
+    createFolder(userIdDirectoryPath)
+    f = open(userIdPath, 'w', encoding="UTF8")
+
+
 
 root.mainloop()
